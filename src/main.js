@@ -13,7 +13,7 @@ var scene = null,
 var VspotLight=[];
 var VHelpers=[];
 var canmove=87;
-
+var texture;
 var sound1 = null,
     countPoints = null,
     modelPlay = null,
@@ -56,6 +56,7 @@ var speedRot = THREE.Math.degToRad(45);
 
 var clock = new THREE.Clock();
 var delta = 0;
+const oro=["Collar_raro_feo", "Cosacalima", "figura_tairona"];
 
 var
     hemisphereLight;
@@ -186,6 +187,7 @@ function createModel(generalPath, pathMtl, pathObj, whatTodraw) {
     });
 }
 
+
 function createLight() {
     // ambientLight=new THREE.AmbientLight( 0x0f0f0f ) // soft white light
     // scene.add( ambientLight );
@@ -234,7 +236,6 @@ function initWorld() {
  */
 document.addEventListener('keydown', function(evt) {
     // console.log(evt);
-    console.log(evt.keyCode,canmove);
     
     if (evt.keyCode == canmove) {
       camHolder.translateZ(-speedTrans * delta);
@@ -338,26 +339,42 @@ function createPickUp(xPos,zPos,name) {
 function loadSculpture(pick, xPos, zPos, name){
   var mtlLoader = new THREE.MTLLoader();
   var objLoader = new THREE.OBJLoader();
+
+  let goldmaterial = new THREE.MeshStandardMaterial( {
+    metalness: 1,
+    roughness: 0.1,
+    emissive: 0x280101,
+    emissiveIntensity: 0.3,
+    envMapIntensity: 1.0,
+    color: 0xdaa520
+    } );
+    texture = new THREE.CubeTextureLoader()
+	.setPath( '../img/' )
+	.load( [
+		'equirectangular.png',
+		'equirectangular.png',
+		'equirectangular.png',
+		'equirectangular.png',
+		'equirectangular.png',
+		'equirectangular.png'
+    ] );
+
     mtlLoader.setResourcePath(`../modelos/${name}/`);
     mtlLoader.setPath(`../modelos/${name}/`);
-    if(name=="figura_tairona" || name=="Collar_raro_feo" || name=="Cosacalima"){
+    if(oro.includes(name)){
         objLoader.setPath(`../modelos/${name}/`);
         objLoader.load(`${name}.obj`, function ( object ) {
                     
             // geodesic = object; // reference doesnt work outside the function
 
             object.traverse(function(node) {
-                node.material= new THREE.MeshPhongMaterial({
-                    color: 0xb2a034,
-                    emissive: 0x291304,
-                    specular: 0xe9ea9e,
-                    shininess: 100
-                })
+                node.material=goldmaterial;
                 
                 node.castShadow = true;
                 node.receiveShadow = false;
                 
             });
+            object.material.envMap=texture;
             object.castShadow=true;
             object.position.x = xPos;
             object.position.y = name=='Pedestal'?0.2: 1.5;
