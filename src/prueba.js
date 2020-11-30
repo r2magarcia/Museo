@@ -42,19 +42,20 @@ function init() {
 		'equirectangular.png'
     ] );
     
-    scene.background=texture;
 
     // let geometry = new THREE.TorusKnotBufferGeometry( 18, 8, 150, 20 );
     let goldmaterial = new THREE.MeshStandardMaterial( {
-        metalness: 0.90,
+        metalness: 1,
         roughness: 0.1,
+        emissive: 0x280101,
+        emissiveIntensity: 0.3,
         envMapIntensity: 1.0,
         color: 0xdaa520
     } );
     var objLoader = new THREE.OBJLoader();
-    objLoader.setPath('../modelos/Cosacalima/');
+    objLoader.setPath('../modelos/Collar_raro_feo/');
     console.log("comienza carga");
-    objLoader.load(`Cosacalima.obj`, function ( object ) {
+    objLoader.load(`Collar_raro_feo.obj`, function ( object ) {
         
         // geodesic = object; // reference doesnt work outside the function
         console.log("asignacion de materiales");
@@ -67,8 +68,8 @@ function init() {
         figura.position.set(0,-0.2,0)
         figura.material.envMap=texture;
         scene.add(figura);
-        scene.add( new THREE.HemisphereLight( 0x443333, 0x222233, 4 ) );
-        scene.add( new THREE.DirectionalLight( 0xffffff, 0.5 ))
+        scene.add( new THREE.HemisphereLight( 0x443333, 0x222233, 2 ) );
+        scene.add( new THREE.DirectionalLight( 0xffffff, 0.2 ))
         const spotLight = new THREE.SpotLight( 0xffffff );
         spotLight.position.set( 100, 1000, 100 );
 
@@ -203,7 +204,7 @@ function render() {
     if(figura)figura.rotation.y += 0.005;
     // planeMesh.visible = params.debug;
 
-    scene.background = background;
+    // scene.background = background;
     // renderer.toneMappingExposure = params.exposure;
 
     renderer.render( scene, camera );

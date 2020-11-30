@@ -12,6 +12,7 @@ var scene = null,
     camHolder;
 var VspotLight=[];
 var VHelpers=[];
+var canmove=87;
 
 var sound1 = null,
     countPoints = null,
@@ -65,7 +66,6 @@ function start() {
     window.onresize = onWindowResize;
     initScene();
     animate();
-    // pin.traverse(function(child){child.castShadow = true;});
 }
 
 function onWindowResize() {
@@ -91,11 +91,11 @@ function animate() {
 }
 
 function createSculptures(){
-    createPickUp(5,5,'alcarraza');
+    createPickUp(10,5,'alcarraza');
     createPickUp(5,-10,'Collar_raro_feo');
-    createPickUp(5,10,'copa');
+    createPickUp(10,10,'copa');
     createPickUp(5,15,'Cosacalima');
-    createPickUp(5,20,'figura_tairona');
+    createPickUp(10,20,'figura_tairona');
 }
 
 function initBasicElements() {
@@ -104,7 +104,7 @@ function initBasicElements() {
     document.body.appendChild( container );
 
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(60, (window.innerWidth-100) / (window.innerHeight-100), 1, 1000);
+    camera = new THREE.PerspectiveCamera(20, (window.innerWidth-100) / (window.innerHeight-100), 0.001, 100);
     renderer = new THREE.WebGLRenderer();
     // renderer.setSize( parseInt(container.style.width), parseInt(container.style.height) );
     renderer.setSize(window.innerWidth-100,window.innerHeight-100);
@@ -140,7 +140,18 @@ function createModel(generalPath, pathMtl, pathObj, whatTodraw) {
         objLoader.setMaterials(materials);
         objLoader.setPath(generalPath);
         objLoader.load(pathObj, function(object) {
-
+            scene.traverse(function(child){
+                child.castShadow =  true;
+                child.receiveShadow=true;
+            });
+            object.traverse(function(child){
+                child.castShadow = true;
+                child.receiveShadow=true;
+            });
+            
+            scene.castShadow=true;
+            scene.recieveShadow=true;
+            console.log(scene);
             // world/player
             switch (whatTodraw) {
                 case "world":
@@ -148,6 +159,9 @@ function createModel(generalPath, pathMtl, pathObj, whatTodraw) {
                     object.scale.set(0.03, 0.03, 0.03);
                     object.position.y = 0;
                     object.position.x = 5;
+                    object.material=new THREE.MeshStandardMaterial({
+
+                    })
                     break;
 
                 case "player":
@@ -173,43 +187,40 @@ function createModel(generalPath, pathMtl, pathObj, whatTodraw) {
 
 
 function createLight() {
-    ambientLight=new THREE.AmbientLight( 0x000000 ) // soft white light
-    scene.add( ambientLight );
+    // ambientLight=new THREE.AmbientLight( 0x0f0f0f ) // soft white light
+    // scene.add( ambientLight );
     const ap=new THREE.AmbientLightProbe(0xf7f7f7,0.5)
     scene.add(ap);
-    const hemiLight = new THREE.HemisphereLight( 0xffffbb, 0x080820, 0.5 );
-    hemiLight.color.setHSL( 0.6, 1, 0.6 );
-    hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+    const hemiLight = new THREE.HemisphereLight( 0xC5AF98, 0x6E4B2E, 0.5 );
     hemiLight.position.set( 0, 50, 0 );
-    // scene.add( hemiLight );
-
-    const hemiLightHelper = new THREE.HemisphereLightHelper( hemiLight, 0.3 );
-    scene.add( hemiLightHelper );
+    scene.add( hemiLight );
 
     //
 
     dirLight = new THREE.DirectionalLight( 0xffffff, 0.2 );
     dirLight.color.setHSL( 0.1, 1, 0.95 );
-    dirLight.position.set( - 1, 1.75, 1 );
+    dirLight.position.set( -10, 4, -10 );
     dirLight.position.multiplyScalar( 30 );
-    scene.add( dirLight );
+    
 
     dirLight.castShadow = true;
 
     dirLight.shadow.mapSize.width = 2048;
     dirLight.shadow.mapSize.height = 2048;
 
-    const d = 50;
+    const d = 5;
 
     dirLight.shadow.camera.left = - d;
     dirLight.shadow.camera.right = d;
     dirLight.shadow.camera.top = d;
     dirLight.shadow.camera.bottom = - d;
 
-    dirLight.shadow.camera.far = 3500;
-    dirLight.shadow.bias = - 0.0001;
+    dirLight.shadow.camera.far = 20;
+    dirLight.shadow.bias = - 1;
 
     const dirLightHelper = new THREE.DirectionalLightHelper( dirLight, 10 );
+
+    scene.add( dirLight );
     scene.add( dirLightHelper );
 }
 
@@ -257,8 +268,9 @@ function initGUI() {
 }
 document.addEventListener('keydown', function(evt) {
     // console.log(evt);
+    console.log(evt.keyCode,canmove);
     
-    if (evt.keyCode === 87) {
+    if (evt.keyCode == canmove) {
       camHolder.translateZ(-speedTrans * delta);
       MovingCube.translateZ( -speedTrans * delta);
       
@@ -315,25 +327,9 @@ window.addEventListener('keyup', function(e) {
 // ----------------------------------
 // Funciones llamadas desde el index:
 // ----------------------------------
-function go2Play() {
-    document.getElementById('blocker').style.display = 'none';
-    document.getElementById('cointainerOthers').style.display = 'block';
-    playAudio(song);
-    fuelInteractions();
-}
-
-function showInfoCreator() {
-    if (document.getElementById("myNameInfo").style.display == "none")
-        document.getElementById("myNameInfo").style.display = "block";
-    else
-        document.getElementById("myNameInfo").style.display = "none";
-
-}
 
 
-function getRandomArbitrary(min, max) {
-    return Math.random() * (max - min) + min;
-}
+
 
 function createPickUp(xPos,zPos,name) {
   // create a geometry
@@ -413,7 +409,10 @@ function loadSculpture(pick, xPos, zPos, name){
                     specular: 0xe9ea9e,
                     shininess: 100
                 })
-
+                
+                    node.castShadow = true;
+                    node.receiveShadow = false;
+                
 
                 
             });
@@ -421,7 +420,7 @@ function loadSculpture(pick, xPos, zPos, name){
             object.position.x = xPos;
             object.position.y = name=='Pedestal'?0.2: 1.5;
             object.position.z = zPos;
-            object.castShadow=true;
+            object.receiveShadow=true;
             modelpick[pick]=object;
             object.name = `sculpture`+pick;
             scene.add(object);
@@ -443,6 +442,7 @@ function loadSculpture(pick, xPos, zPos, name){
             if(name=="copa") object.position.y=0;
             object.position.z = zPos;
             object.castShadow=true;
+            object.receiveShadow=true;
             modelpick[pick]=object;
             object.name = `sculpture`+pick;
             console.log(object.name);
@@ -467,6 +467,12 @@ function createPlayerMove() {
 }
 
 function collisionAnimate() {
+    canmove=87;
+    document.getElementById("alcarraza").style.display="none";
+        document.getElementById("Collar_raro_feo").style.display="none";
+        document.getElementById("copa").style.display="none";
+        document.getElementById("Cosacalima").style.display="none";
+        document.getElementById("figura_tairona").style.display="none";
 
     var originPoint = MovingCube.position.clone();
 
@@ -475,37 +481,74 @@ function collisionAnimate() {
         var globalVertex = localVertex.applyMatrix4(MovingCube.matrix);
         var directionVector = globalVertex.sub(MovingCube.position);
         
+        
 
         var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
         var collisionResults = ray.intersectObjects(collidableMeshList);
         var collisionRCollect = ray.intersectObjects(collectibleMeshList);
         
+        
         if (collisionRCollect.length > 0 && collisionRCollect[0].distance < directionVector.length()) {
+            canmove=-1;
             // console.log(collisionRCollect);
+            // speedTrans=0;
             var sculpture = (scene.getObjectByName('sculpture'+collisionRCollect[0].object.name));
-            console.log("Collision");
-            document.getElementById("alcarraza").style.display="none";
-            document.getElementById("Collar_raro_feo").style.display="none";
-            document.getElementById("copa").style.display="none";
-            document.getElementById("Cosacalima").style.display="none";
-            document.getElementById("figura_tairona").style.display="none";
+            // console.log(sculpture.name);
+            // document.getElementById("alcarraza").style.display="none";
+            // document.getElementById("Collar_raro_feo").style.display="none";
+            // document.getElementById("copa").style.display="none";
+            // document.getElementById("Cosacalima").style.display="none";
+            // document.getElementById("figura_tairona").style.display="none";
+        
+            
             switch (sculpture.name) {
                 case "sculpture0":
                     document.getElementById("alcarraza").style.display="block";
+                    document.getElementById("Collar_raro_feo").style.display="none";
+                    document.getElementById("copa").style.display="none";
+                    document.getElementById("Cosacalima").style.display="none";
+                    document.getElementById("figura_tairona").style.display="none";
+        
                     break;
                 case "sculpture1":
                     document.getElementById("Collar_raro_feo").style.display="block";
+                    document.getElementById("alcarraza").style.display="none";
+                    document.getElementById("copa").style.display="none";
+                    document.getElementById("Cosacalima").style.display="none";
+                    document.getElementById("figura_tairona").style.display="none";
+        
                     break;
                 case "sculpture2":
                     document.getElementById("copa").style.display="block";
+                    document.getElementById("alcarraza").style.display="none";
+                    document.getElementById("Collar_raro_feo").style.display="none";
+                    document.getElementById("Cosacalima").style.display="none";
+                    document.getElementById("figura_tairona").style.display="none";
+        
                     break;
                 case "sculpture3":
                     document.getElementById("Cosacalima").style.display="block";
+                    document.getElementById("alcarraza").style.display="none";
+                    document.getElementById("Collar_raro_feo").style.display="none";
+                    document.getElementById("copa").style.display="none";
+                    document.getElementById("figura_tairona").style.display="none";
+        
                     break;
                 case "sculpture4":
                     document.getElementById("figura_tairona").style.display="block";
+                    document.getElementById("alcarraza").style.display="none";
+                    document.getElementById("Collar_raro_feo").style.display="none";
+                    document.getElementById("copa").style.display="none";
+                    document.getElementById("Cosacalima").style.display="none";
+        
                     break;
                 default:
+                    document.getElementById("alcarraza").style.display="none";
+                    document.getElementById("Collar_raro_feo").style.display="none";
+                    document.getElementById("copa").style.display="none";
+                    document.getElementById("Cosacalima").style.display="none";
+                    document.getElementById("figura_tairona").style.display="none";
+        
                     break;
             }
 
@@ -523,7 +566,15 @@ function collisionAnimate() {
             //     gamewon=true;
             // }
             // i += 20;
-        } 
+        }
+        // else{
+        //     document.getElementById("alcarraza").style.display="none";
+        //     document.getElementById("Collar_raro_feo").style.display="none";
+        //     document.getElementById("copa").style.display="none";
+        //     document.getElementById("Cosacalima").style.display="none";
+        //     document.getElementById("figura_tairona").style.display="none";
+        
+        // }
     }
 }
 
