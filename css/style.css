@@ -3,6 +3,90 @@
     padding: 0;
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
+    color: black;
+}
+
+.return{
+    z-index: 2;
+    display:  flex;
+    position: absolute;
+    opacity: 50%;
+    left: 0;
+    top: 0;
+    width: fit-content;
+    height: fit-content;
+    background-color: #ffffff;
+}
+
+.return #retorno{
+    width: fit-content;
+    height: fit-content;
+}
+
+#alcarraza{
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+}
+
+#Collar_raro_feo{
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+}
+
+#copa{
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+}
+
+#Cosacalima{
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+}
+
+#figura_tairona{
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+}
+
+#canvas{
+    width: 100vw;
+    height: 100vh;
+}
+
+#return{
+    position: absolute;
+    left: 0;
+    top: 0;;
+}
+.instrucciones{
+    z-index: 2;
+    display:  flex;
+    position: absolute;
+    opacity: 50%;
+    left: 63%;
+    bottom: 65%;
+    width: 35vw;
+    height: 30vh;
+    background-color: #ffffff;
+}
+
+.close{
+    left: 0;
+}
+
+.instrucciones #wasd{
+    width: 60%;
+    height: auto;
+}
+
+.instrucciones #instruccionesText{
+    width: 40%;
 }
 
 #app {

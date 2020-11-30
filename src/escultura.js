@@ -24,7 +24,7 @@ function init(name) {
     document.body.appendChild( container );
 
 
-    camera = new THREE.PerspectiveCamera(60, (window.innerWidth-100) / (window.innerHeight-100), 0.0001, 20);
+    camera = new THREE.PerspectiveCamera(60, (window.innerWidth) / (window.innerHeight), 0.0001, 20);
     camera.position.set( 0, 1, 1.5 );
 
     scene = new THREE.Scene();
@@ -62,7 +62,7 @@ function init(name) {
     // scene.add( planeMesh );
     
 
-    renderer.setSize(window.innerWidth-100,window.innerHeight-100);
+    renderer.setSize(window.innerWidth,window.innerHeight);
     container.appendChild( renderer.domElement );
 
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -82,9 +82,9 @@ function init(name) {
 }
 
 function onWindowResize() {
-    camera.aspect = (window.innerWidth-100) / (window.innerHeight-100);
+    camera.aspect = (window.innerWidth) / (window.innerHeight);
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth-100,window.innerHeight-100);
+    renderer.setSize(window.innerWidth,window.innerHeight);
 }
 
 function animate() {

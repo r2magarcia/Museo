@@ -69,9 +69,10 @@ function start() {
 }
 
 function onWindowResize() {
-    camera.aspect = (window.innerWidth-100) / (window.innerHeight-100);
+    // camera.aspect = (window.innerWidth-100) / (window.innerHeight-100);
+    camera.aspect = (window.innerWidth) / (window.innerHeight)
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth-100,window.innerHeight-100);
+    renderer.setSize(window.innerWidth,window.innerHeight);
 }
 
 function initScene() {
@@ -104,10 +105,10 @@ function initBasicElements() {
     document.body.appendChild( container );
 
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(20, (window.innerWidth-100) / (window.innerHeight-100), 0.001, 100);
+    camera = new THREE.PerspectiveCamera(20, (window.innerWidth) / (window.innerHeight), 0.001, 100);
     renderer = new THREE.WebGLRenderer();
     // renderer.setSize( parseInt(container.style.width), parseInt(container.style.height) );
-    renderer.setSize(window.innerWidth-100,window.innerHeight-100);
+    renderer.setSize(window.innerWidth-1,window.innerHeight-1);
     container.appendChild( renderer.domElement );
     clock = new THREE.Clock();
 
@@ -274,6 +275,14 @@ document.addEventListener('keydown', function(evt) {
 function createPickUp(xPos,zPos,name) {
     // create a geometry
     yPos=0.6;
+
+    // if(name == 'figura_tairona'){
+    //     yPos = 3;
+    // }
+
+    // if(name == 'Collar_raro_feo'){
+    //     yPos = 4;
+    // }
     const geometry = new THREE.BoxBufferGeometry( 2, 3, 2 );
     
     //  Create texture 
@@ -352,6 +361,12 @@ function loadSculpture(pick, xPos, zPos, name){
             object.castShadow=true;
             object.position.x = xPos;
             object.position.y = name=='Pedestal'?0.2: 1.5;
+            if(name == 'Collar_raro_feo'){
+                object.position.y = 1.9;
+            }
+            if(name == 'figura_tairona'){
+                object.position.y = 3.5;
+            }
             object.position.z = zPos;
             object.receiveShadow=true;
             modelpick[pick]=object;

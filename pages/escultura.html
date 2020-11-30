@@ -21,5 +21,18 @@
 	</head>
 	<body onload="init('Cosacalima')">
 		<div id="canvas"></div>
+		<div class="instrucciones" id="alerta">
+			<a class="close">&times;</a>
+			<img src="../img/mouse.png" id="wasd" alt="">
+			<span id="instruccionesText">Usa el mouse y la rueda para inspeccionar el elemento a tu propio gusto, cuando terminas presiona el botón de volver</span>
+		</div>
+		<div class="return">
+			<a href="./museum.html">Volver Al Museo<button id="retorno">Return</button></a>
+		</div>
+		<script>
+			$('.close').click(function(){
+				document.getElementById("alerta").style.display = "none";
+			});
+		</script>
 	</body>
 </html>
