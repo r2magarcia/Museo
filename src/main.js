@@ -185,7 +185,6 @@ function createModel(generalPath, pathMtl, pathObj, whatTodraw) {
     });
 }
 
-
 function createLight() {
     // ambientLight=new THREE.AmbientLight( 0x0f0f0f ) // soft white light
     // scene.add( ambientLight );
@@ -221,51 +220,17 @@ function createLight() {
     const dirLightHelper = new THREE.DirectionalLightHelper( dirLight, 10 );
 
     scene.add( dirLight );
-    scene.add( dirLightHelper );
+    // scene.add( dirLightHelper );
 }
 
 function initWorld() {
-
-    // createModel('./modelos/Museo/', 'MuseoProyecto.mtl', 'MuseoProyecto.obj', 'world');
     createModel('../modelos/MuseoArreglado/', 'MuseoArreglado.mtl', 'MuseoArreglado.obj', 'world');
-    // createModel('./modelos/Car/', 'Cartoon_Lowpoly_Car.mtl', 'Cartoon_Lowpoly_Car.obj', 'player');
-
-    // floor
-    var floorGeometry = new THREE.PlaneBufferGeometry(2000, 2000, 100, 100);
-    floorGeometry.rotateX(-Math.PI / 2);
-    floorGeometry = floorGeometry.toNonIndexed(); // ensure each face has unique vertices
-
-    var floorMaterial = new THREE.MeshBasicMaterial({ color: 0x383535 });
-    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    // scene.add(floor);
-
     createSculptures();
 }
 
-function initGUI() {
-
-  var gui = new dat.GUI(),
-      speed = 0.1;
-
-  parametros ={
-      b: 1000,
-      d: 1    // Slider intensity light
-  };
-
-  // Add parametros to Screen
-  var tipmiliseconds = gui.add(parametros, 'b').min(2000).max(7000).step(speed).name("Tip interval")
-  var intensityGUI = gui.add(parametros, 'd').min(0).max(2).step(speed).name('Intensity Light');
-
-  intensityGUI.onChange(function(jar) {
-      ambientLight.intensity = jar;
-  });
-
-  tipmiliseconds.onChange(function(jar){
-      interval = jar;
-  });
-
-  gui.close();
-}
+/**
+ * Event listener de las teclas wasd para moverse
+ */
 document.addEventListener('keydown', function(evt) {
     // console.log(evt);
     console.log(evt.keyCode,canmove);
@@ -304,55 +269,30 @@ document.addEventListener('keydown', function(evt) {
       camera.rotation.x += -speedRot * delta;
     } // down arrow, looking deeper
   
-  });
-
-
-window.addEventListener('keyup', function(e) {
-    switch (e.keyCode) {
-        case 68:
-            input.right = 0;
-            break;
-        case 65:
-            input.left = 0;
-            break;
-        case 87:
-            input.up = 0;
-            break;
-        case 83:
-            input.down = 0;
-            break;
-    }
 });
 
-// ----------------------------------
-// Funciones llamadas desde el index:
-// ----------------------------------
-
-
-
-
 function createPickUp(xPos,zPos,name) {
-  // create a geometry
-  yPos=0.6;
-  const geometry = new THREE.BoxBufferGeometry( 2, 3, 2 );
-  
-  //  Create texture 
-  const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe:true, transparent: true, opacity: 1 });
+    // create a geometry
+    yPos=0.6;
+    const geometry = new THREE.BoxBufferGeometry( 2, 3, 2 );
+    
+    //  Create texture 
+    const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe:true, transparent: true, opacity: 1 });
 
-  // create a Mesh
-  mesh[pickupNum] = new THREE.Mesh( geometry, material );
-  
+    // create a Mesh
+    mesh[pickupNum] = new THREE.Mesh( geometry, material );
+    
 
-  var randomIdentify = Math.floor(Math.random() * 101);
-  mesh[pickupNum].name = cont;
-  console.log(mesh[pickupNum].name);
-  mesh[pickupNum].id   = "modelToPick"+randomIdentify;
-  cont++;
+    var randomIdentify = Math.floor(Math.random() * 101);
+    mesh[pickupNum].name = cont;
+    console.log(mesh[pickupNum].name);
+    mesh[pickupNum].id   = "modelToPick"+randomIdentify;
+    cont++;
 
-  mesh[pickupNum].position.x = xPos;
-  mesh[pickupNum].position.y = yPos;
-  mesh[pickupNum].position.z = zPos;
-  var spotLight = new THREE.SpotLight( 0xccc4a0 );
+    mesh[pickupNum].position.x = xPos;
+    mesh[pickupNum].position.y = yPos;
+    mesh[pickupNum].position.z = zPos;
+    var spotLight = new THREE.SpotLight( 0xccc4a0 );
     spotLight.position.set( xPos, 4, zPos );
 
     spotLight.castShadow = true;
@@ -377,18 +317,13 @@ function createPickUp(xPos,zPos,name) {
     VHelpers.push(spotLightHelper);
     // scene.add( VHelpers[VHelpers.length-1] );
 
-  // add the mesh to the scene collisions object
-  collectibleMeshList.push(mesh[pickupNum]);
-  scene.add(mesh[pickupNum]);
-  
-  loadSculpture(pickupNum, xPos, zPos, name);
-  if(name!="copa")loadSculpture(pickupNum, xPos, zPos, 'Pedestal');
-//   console.log(collectibleMeshList);
-//   console.log(cont);
-  
-
-  pickupNum++;
-  
+    // add the mesh to the scene collisions object
+    collectibleMeshList.push(mesh[pickupNum]);
+    scene.add(mesh[pickupNum]);
+    
+    loadSculpture(pickupNum, xPos, zPos, name);
+    if(name!="copa")loadSculpture(pickupNum, xPos, zPos, 'Pedestal');
+    pickupNum++; 
 }
 
 function loadSculpture(pick, xPos, zPos, name){
@@ -410,10 +345,8 @@ function loadSculpture(pick, xPos, zPos, name){
                     shininess: 100
                 })
                 
-                    node.castShadow = true;
-                    node.receiveShadow = false;
-                
-
+                node.castShadow = true;
+                node.receiveShadow = false;
                 
             });
             object.castShadow=true;
@@ -446,18 +379,12 @@ function loadSculpture(pick, xPos, zPos, name){
             modelpick[pick]=object;
             object.name = `sculpture`+pick;
             console.log(object.name);
-            scene.add(object);
-            
-      
-              });
-      
-          });
-    }
-    
+            scene.add(object);      
+            });
+        });
+    } 
 }
-// ----------------------------------
-// Funciones llamadas desde el index:
-// ----------------------------------
+
 function createPlayerMove() {
     var cubeGeometry = new THREE.CubeGeometry(2,2,2);
     var wireMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true});
@@ -469,10 +396,10 @@ function createPlayerMove() {
 function collisionAnimate() {
     canmove=87;
     document.getElementById("alcarraza").style.display="none";
-        document.getElementById("Collar_raro_feo").style.display="none";
-        document.getElementById("copa").style.display="none";
-        document.getElementById("Cosacalima").style.display="none";
-        document.getElementById("figura_tairona").style.display="none";
+    document.getElementById("Collar_raro_feo").style.display="none";
+    document.getElementById("copa").style.display="none";
+    document.getElementById("Cosacalima").style.display="none";
+    document.getElementById("figura_tairona").style.display="none";
 
     var originPoint = MovingCube.position.clone();
 
@@ -481,26 +408,15 @@ function collisionAnimate() {
         var globalVertex = localVertex.applyMatrix4(MovingCube.matrix);
         var directionVector = globalVertex.sub(MovingCube.position);
         
-        
-
         var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
         var collisionResults = ray.intersectObjects(collidableMeshList);
         var collisionRCollect = ray.intersectObjects(collectibleMeshList);
         
-        
         if (collisionRCollect.length > 0 && collisionRCollect[0].distance < directionVector.length()) {
             canmove=-1;
-            // console.log(collisionRCollect);
-            // speedTrans=0;
+
             var sculpture = (scene.getObjectByName('sculpture'+collisionRCollect[0].object.name));
-            // console.log(sculpture.name);
-            // document.getElementById("alcarraza").style.display="none";
-            // document.getElementById("Collar_raro_feo").style.display="none";
-            // document.getElementById("copa").style.display="none";
-            // document.getElementById("Cosacalima").style.display="none";
-            // document.getElementById("figura_tairona").style.display="none";
-        
-            
+
             switch (sculpture.name) {
                 case "sculpture0":
                     document.getElementById("alcarraza").style.display="block";
@@ -551,30 +467,7 @@ function collisionAnimate() {
         
                     break;
             }
-
-            
-            // document.getElementById("points").innerHTML = points;
-            // var toErase = scene.getObjectByName('drop'+collisionRCollect[0].object.name);
-            // toErase.visible = false;
-            // collisionRCollect[0].object.visible = false;
-            // playAudio(pick);
-            // points += 1;
-            // if(points == 7){
-            //     document.getElementById("win").style.display = "block";
-            //     pauseAudio(song);
-            //     playAudio(wins);
-            //     gamewon=true;
-            // }
-            // i += 20;
         }
-        // else{
-        //     document.getElementById("alcarraza").style.display="none";
-        //     document.getElementById("Collar_raro_feo").style.display="none";
-        //     document.getElementById("copa").style.display="none";
-        //     document.getElementById("Cosacalima").style.display="none";
-        //     document.getElementById("figura_tairona").style.display="none";
-        
-        // }
     }
 }
 

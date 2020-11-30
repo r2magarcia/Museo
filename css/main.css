@@ -94,6 +94,11 @@ body {
 	right: 0;
 }
 
+img{
+	width: 400px;
+	height: auto;
+}
+
 .image{
 	height: fit-content;
 	position: absolute;
@@ -157,4 +162,11 @@ a, button, input, select {
 	-ms-user-select: none;
 	user-select: none;
 	z-index: 2 !important; /* TODO Solve this in HTML */
+}
+
+button{
+	position: absolute;
+	z-index: 2;
+	bottom: 0;
+	
 }
