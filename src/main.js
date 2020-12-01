@@ -51,8 +51,8 @@ var posZ = 1;
 var player = null;
 var playerCreated = false;
 
-var speedTrans = 5;
-var speedRot = THREE.Math.degToRad(45);
+var speedTrans = 20;
+var speedRot = THREE.Math.degToRad(75);
 
 var clock = new THREE.Clock();
 var delta = 0;
@@ -93,11 +93,11 @@ function animate() {
 }
 
 function createSculptures(){
-    createPickUp(10,5,'alcarraza');
-    createPickUp(5,-10,'Collar_raro_feo');
-    createPickUp(10,10,'copa');
-    createPickUp(5,15,'Cosacalima');
-    createPickUp(10,20,'figura_tairona');
+    createPickUp(25,25,'alcarraza');
+    createPickUp(-16,23,'Collar_raro_feo');
+    createPickUp(-16,25,'copa');
+    createPickUp(5,40,'Cosacalima');
+    createPickUp(25,23,'figura_tairona');
 }
 
 function initBasicElements() {
@@ -125,6 +125,7 @@ function initBasicElements() {
     camHolder.add(camera);
     // camHolder.add(MovingCube);
     camHolder.position.set(5,1.7,5);
+    camHolder.rotation.y = (Math.PI / 2 + Math.PI / 2);
     createPlayerMove();
     scene.add(camHolder);
 }
@@ -287,7 +288,7 @@ function createPickUp(xPos,zPos,name) {
     const geometry = new THREE.BoxBufferGeometry( 2, 3, 2 );
     
     //  Create texture 
-    const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe:true, transparent: true, opacity: 1 });
+    const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe:true, transparent: true, opacity: 0 });
 
     // create a Mesh
     mesh[pickupNum] = new THREE.Mesh( geometry, material );
@@ -332,7 +333,7 @@ function createPickUp(xPos,zPos,name) {
     scene.add(mesh[pickupNum]);
     
     loadSculpture(pickupNum, xPos, zPos, name);
-    if(name!="copa")loadSculpture(pickupNum, xPos, zPos, 'Pedestal');
+    loadSculpture(pickupNum, xPos, zPos, 'Pedestal');
     pickupNum++; 
 }
 
@@ -377,13 +378,24 @@ function loadSculpture(pick, xPos, zPos, name){
             object.material.envMap=texture;
             object.castShadow=true;
             object.position.x = xPos;
-            object.position.y = name=='Pedestal'?0.2: 1.5;
+            object.position.y = 1.3;
+            if(name == 'Pedestal'){
+                object.position.y = 0;
+            }
             if(name == 'Collar_raro_feo'){
-                object.position.y = 1.9;
+                object.position.y = 1.65;
+                object.rotation.y = -(Math.PI / 2)
             }
             if(name == 'figura_tairona'){
-                object.position.y = 3.5;
+                object.position.y = 2.3;
+                object.rotation.y = Math.PI / 2;
+                object.scale.set(0.5, 0.5, 0.5);
             }
+            // if(name == 'copa'){
+            //     object.position.y = 1.9;
+            //     // object.rotation.y = Math.PI / 2;
+            //     object.scale.set(0.5, 0.5, 0.5);
+            // }
             object.position.z = zPos;
             object.receiveShadow=true;
             modelpick[pick]=object;
@@ -402,9 +414,13 @@ function loadSculpture(pick, xPos, zPos, name){
             objLoader.setPath(`../modelos/${name}/`);
             objLoader.load(`${name}.obj`, function (object) {
             name=='Pedestal'?object.scale.set(0.0115, 0.0115, 0.0115):object.scale.set(1,1,1);
+            if(name=="copa") object.scale.set(0.3, 0.3, 0.3);
             object.position.x = xPos;
-            object.position.y = name=='Pedestal'?0.2: 1.5;
-            if(name=="copa") object.position.y=0;
+            object.position.y = 1.3;
+            if(name == 'Pedestal'){
+                object.position.y = 0;
+            }
+            // if(name=="copa") object.position.y=0;
             object.position.z = zPos;
             object.castShadow=true;
             object.receiveShadow=true;
@@ -419,9 +435,10 @@ function loadSculpture(pick, xPos, zPos, name){
 
 function createPlayerMove() {
     var cubeGeometry = new THREE.CubeGeometry(2,2,2);
-    var wireMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true});
+    var wireMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0});
     MovingCube = new THREE.Mesh(cubeGeometry, wireMaterial);
     MovingCube.position.set(5,1.7,5);
+    // MovingCube.rotation = Math.PI / 2 + Math.PI / 2;
     scene.add(MovingCube);
 }
 
