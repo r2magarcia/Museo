@@ -88,6 +88,8 @@ function animate() {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
     delta = clock.getDelta();
+    // MovingCube.rotation = camHolder.rotation;
+    // MovingCube.position = camHolder.position;
     // movePlayer();
     collisionAnimate();
 }
@@ -125,7 +127,7 @@ function initBasicElements() {
     camHolder.add(camera);
     // camHolder.add(MovingCube);
     camHolder.position.set(5,1.7,5);
-    camHolder.rotation.y = (Math.PI / 2 + Math.PI / 2);
+    // camHolder.rotation.y = (Math.PI / 2 + Math.PI / 2);
     createPlayerMove();
     scene.add(camHolder);
 }
@@ -438,7 +440,7 @@ function createPlayerMove() {
     var wireMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true, opacity: 0});
     MovingCube = new THREE.Mesh(cubeGeometry, wireMaterial);
     MovingCube.position.set(5,1.7,5);
-    // MovingCube.rotation = Math.PI / 2 + Math.PI / 2;
+    
     scene.add(MovingCube);
 }
 

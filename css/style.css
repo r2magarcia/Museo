@@ -25,33 +25,43 @@
 }
 
 #alcarraza{
+    width: auto;
+    height: 60px;
     position: absolute;
     left: 50%;
-    bottom: 50%;
+    bottom: 0;
 }
 
 #Collar_raro_feo{
+    width: auto;
+    height: 60px;
     position: absolute;
     left: 50%;
-    bottom: 50%;
+    bottom: 0;
 }
 
 #copa{
+    width: auto;
+    height: 60px;
     position: absolute;
     left: 50%;
-    bottom: 50%;
+    bottom: 0;
 }
 
 #Cosacalima{
+    width: auto;
+    height: 60px;
     position: absolute;
     left: 50%;
-    bottom: 50%;
+    bottom: 0;
 }
 
 #figura_tairona{
+    width: auto;
+    height: 60px;
     position: absolute;
     left: 50%;
-    bottom: 50%;
+    bottom: 0;
 }
 
 #canvas{
